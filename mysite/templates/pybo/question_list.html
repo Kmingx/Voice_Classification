@@ -1,0 +1,20 @@
+{% if question_list %}
+<ul>
+  {% for question in question_list %}
+  <li><a href="/pybo/{{ question.id }}/">{{ question.subject }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>질문이 없습니다.</p>
+{% endif %} --> {% if menu_list %}
+<ul>
+  {% for menu in menu_list %}
+  <li>{{ menu.menuName }}</li>
+  <li>{{ menu.Price }}</li>
+  <li>{{ menu.content }}</li>
+  <br />
+  {% endfor %}
+</ul>
+{% else %}
+<p>질문이 없습니다.</p>
+{% endif %}
