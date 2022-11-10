@@ -12,7 +12,7 @@
         padding: 0;
         text-align: center;
       }
-
+asd
       #wrap {
         width: 100%;
         margin: 0 auto;
@@ -48,6 +48,9 @@
           type="text"
           placeholder="마이크 클릭후 음성으로 검색어 입력"
           autocomplete="off"
+          id="search_kw"
+          class="form-control"
+          value="{{ kw|default_if_none:'' }}"
         />
         <button class="dictate">
           <i class="ic-mike"></i>
@@ -80,13 +83,9 @@
             </g>
           </svg>
         </button>
-        <button
-          class="summit"
-          id="test"
-          onclick="location.href='/pybo/menulist'"
-        >
-          ▶
-        </button>
+        <form id="searchForm" method="get" action="{% url 'index' %}">
+          <button class="summitbtn" type="submit" id="btn_search">d</button>
+          <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
       </div>
     </div>
     <div class="main-text">
@@ -105,6 +104,8 @@
         texts: "",
         isRecognizing: true,
       };
+
+
 
       (() => {
         /* Speech API start */
@@ -156,8 +157,15 @@
               unactive();
             }
           });
+
+          $(".summitbtn").addEventListener('click', ()=> {
+          document.getElementById('kw').value = document.getElementById('search_kw').value;
+          document.getElementById('searchForm').submit();
+          });
         }
-      })();
+      }
+      )();
+      
     </script>
   </body>
 </html>
