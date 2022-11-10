@@ -83,8 +83,8 @@ asd
             </g>
           </svg>
         </button>
-        <form id="searchForm" method="get" action="{% url 'index' %}">
-          <button class="summitbtn" type="submit" id="btn_search">d</button>
+        <form id="searchForm" method="get" action="{% url 'index' %}"> <!-- 값 전송-->
+          <button class="summitbtn" type="submit" id="btn_search">▶</button>
           <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
       </div>
     </div>
@@ -157,7 +157,7 @@ asd
               unactive();
             }
           });
-
+                <!-- 서밋 버튼 클릭시 전송-->
           $(".summitbtn").addEventListener('click', ()=> {
           document.getElementById('kw').value = document.getElementById('search_kw').value;
           document.getElementById('searchForm').submit();
