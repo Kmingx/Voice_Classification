@@ -4,6 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!--추가-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Speech Detection</title>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
     <style>
@@ -12,7 +14,6 @@
         padding: 0;
         text-align: center;
       }
-asd
       #wrap {
         width: 100%;
         margin: 0 auto;
@@ -25,7 +26,7 @@ asd
       .main-img {
         width: 350px;
         height: 300px;
-        /* 		   overflow:hidden; */
+        /*          overflow:hidden; */
         padding-top: 50px;
         margin: 0 auto;
       }
@@ -34,6 +35,7 @@ asd
       }
     </style>
   </head>
+
   <body>
     <div id="wrap">
       <main>
@@ -52,7 +54,7 @@ asd
           class="form-control"
           value="{{ kw|default_if_none:'' }}"
         />
-        <button class="dictate">
+        <button class="dictate" id="audiorecord">
           <i class="ic-mike"></i>
           <svg width="1.25rem" height="1.25rem" viewBox="0 0 100 100">
             <g stroke="#fff" stroke-width="15">
@@ -83,9 +85,17 @@ asd
             </g>
           </svg>
         </button>
-        <form id="searchForm" method="get" action="{% url 'index' %}"> <!-- 값 전송-->
+        <form id="searchForm" method="POST" action="{% url 'index' %}"> <!-- 값 전송-->
+          {% csrf_token %}
           <button class="summitbtn" type="submit" id="btn_search">▶</button>
           <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
+          <input type="hidden" id="audiourl" name="audiourl" value="{{ audiourl|default_if_none:'' }}">
+          <input type="hidden" id="audiourl2" name="audiourl2" value="{{ audiourl2|default_if_none:'' }}">
+          
+          <!-- Get 방식
+          <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
+          <input type="hidden" id="audio" name="audio" value="{{ audio|default_if_none:'' }}">
+          -->
       </div>
     </div>
     <div class="main-text">
@@ -96,7 +106,9 @@ asd
         말씀해주세요</b
       >
     </div>
-
+    <a id="download">다운</a>
+    <audio controls>녹음된 소리를 재생할 audio 엘리먼트</audio>
+    
     <script>
       const $ = (el) => document.querySelector(el);
 
@@ -105,26 +117,34 @@ asd
         isRecognizing: true,
       };
 
+      const constraints = {
+          audio: true,
+      };
 
-
-      (() => {
+      navigator.mediaDevices.getUserMedia(constraints)
+      .then((stream) => {
         /* Speech API start */
         let SpeechRecognition =
           window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!("webkitSpeechRecognition" in window)) {
           alert("지원 안되는 브라우저 입니다. !");
         } else {
+            
           const recognition = new SpeechRecognition();
           recognition.interimResults = true; // true면 음절을 연속적으로 인식하나 false면 한 음절만 기록함
           recognition.lang = "ko-KR"; // 값이 없으면 HTML의 <html lang="en">을 참고합니다. ko-KR, en-US
           recognition.continuous = false; //각 인식에 대해 연속 결과가 반환되는지 아니면 단일 결과만 반환되는지를 제어합니다. 기본값은 단일( false.)
           recognition.maxAlternatives = 20000; // maxAlternatives가 숫자가 작을수록 발음대로 적고, 크면 문장의 적합도에 따라 알맞은 단어로 대체합니다.
 
+            
           recognition.onspeechend = function () {
             // 음성 감지가 끝날때 실행될 이벤트
             recognition.stop();
             $(".dictate").classList.remove("on");
             store.isRecognizing = true;
+            // 녹음 종료
+            mediaRecorder.stop();
+            isRecording = false;
           };
 
           recognition.onresult = function (e) {
@@ -163,9 +183,64 @@ asd
           document.getElementById('searchForm').submit();
           });
         }
-      }
-      )();
-      
+      }   
+      )     
+    </script>
+    <script>
+      // 엘리먼트 취득
+      const $audioEl = document.querySelector("audio");
+      const $btn = document.querySelector(".dictate");
+      const downloadLink = document.getElementById("download");
+  
+      // 녹음중 상태 변수
+      let isRecording = false;
+  
+      // MediaRecorder 변수 생성
+      let mediaRecorder = null;
+  
+      // 녹음 데이터 저장 배열
+      const audioArray = [];
+  
+      $btn.onclick = async function (event) {
+        if (!isRecording) {
+          // 마이크 mediaStream 생성: Promise를 반환하므로 async/await 사용
+          const mediaStream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+          });
+  
+          // MediaRecorder 생성
+          mediaRecorder = new MediaRecorder(mediaStream);
+  
+          // 이벤트핸들러: 녹음 데이터 취득 처리
+          mediaRecorder.ondataavailable = (event) => {
+            audioArray.push(event.data); // 오디오 데이터가 취득될 때마다 배열에 담아둔다.
+          };
+  
+          // 이벤트핸들러: 녹음 종료 처리 & 재생하기
+          mediaRecorder.onstop = (event) => {
+            // 녹음이 종료되면, 배열에 담긴 오디오 데이터(Blob)들을 합친다: 코덱도 설정해준다.
+            const blob = new Blob(audioArray, { type: "audio/wav codecs=opus" });
+            audioArray.splice(0); // 기존 오디오 데이터들은 모두 비워 초기화한다.
+  
+            // Blob 데이터에 접근할 수 있는 주소를 생성한다.
+            const blobURL = window.URL.createObjectURL(blob);
+            document.getElementById('audiourl').value = blob
+            document.getElementById('audiourl2').value = blobURL
+            // audio엘리먼트로 재생한다.
+            $audioEl.src = blobURL;
+            $audioEl.play();
+  
+            downloadLink.href = blobURL;
+            downloadLink.download = "acetest.wav";
+          };
+  
+          // 녹음 시작
+          mediaRecorder.start();
+          isRecording = true;
+        } else {
+          
+        }
+      };
     </script>
   </body>
 </html>

@@ -97,7 +97,7 @@
 					<div class="clear"></div>
 			</div>
 		</main>
-
+		<audio controls>녹음된 소리를 재생할 audio 엘리먼트</audio>
 		<div class="clear"></div>
 		<footer>
 			<b class="foot-text"> 주문하실 메뉴를 말씀해주세요
@@ -105,5 +105,18 @@
 			<button type ="button"><img class="btn-img" src="images/mic3.png"></button>
 		</footer>
 	</div>
+
+	<script>
+		
+		const $audioEl = document.querySelector("audio");
+  
+		// Blob 데이터에 접근할 수 있는 주소를 생성한다.
+		  const blobURL = window.URL.createObjectURL(audiourl);
+  
+		  // audio엘리먼트로 재생한다.
+		  $audioEl.src = blobURL;
+		  $audioEl.play();
+  
+	 </script>
 </body>
 </html>

@@ -84,23 +84,37 @@
           </svg>
         </button>
         <form id="searchForm" method="get" action="{% url 'index' %}">
-            <button class="btn btn-outline-secondary" type="submit" id="btn_search">d</button>
-            <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
-<!--            <input type="hidden" id="page" name="page" value="{{ page }}">-->
+          <button
+            class="btn btn-outline-secondary"
+            type="submit"
+            id="btn_search"
+          >
+            d
+          </button>
+          <input
+            type="hidden"
+            id="kw"
+            name="kw"
+            value="{{ kw|default_if_none:'' }}"
+          />
+          <!--            <input type="hidden" id="page" name="page" value="{{ page }}">-->
         </form>
-         <!--<div class="input-group-append">
+        <!--<div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="button" id="btn_search">▶</button>
                 </div>-->
-<!--        <button class="summit" id="test" onclick="location.href='/pybo/index'">-->
-<!--          ▶-->
-<!--        </button>-->
+        <!--        <button class="summit" id="test" onclick="location.href='/pybo/index'">-->
+        <!--          ▶-->
+        <!--        </button>-->
       </div>
     </div>
 
     <div class="main-text">
       <b>AI 음성주문 키오스크</b><br />
       <b>주문하실 메뉴를 말씀해주세요</b><br />
-      <b>추천 받으시려면 <span style="color: red">"메뉴추천"</span>이라고 말씀해주세요</b>
+      <b
+        >추천 받으시려면 <span style="color: red">"메뉴추천"</span>이라고
+        말씀해주세요</b
+      >
     </div>
     <script>
       const $ = (el) => document.querySelector(el);
@@ -110,6 +124,26 @@
         isRecognizing: true,
       };
 
+      const constraints = {
+        audio: true,
+      };
+      let chunks = [];
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)(); // 오디오 컨텍스트 정의
+      const analyser = audioCtx.createAnalyser();
+      //        const distortion = audioCtx.createWaveShaper()
+      //        const gainNode = audioCtx.createGain()
+      //        const biquadFilter = audioCtx.createBiquadFilter()
+
+      function makeSound(stream) {
+        const source = audioCtx.createMediaStreamSource(stream);
+
+        source.connect(analyser);
+        //            analyser.connect(distortion)
+        //            distortion.connect(biquadFilter)
+        //            biquadFilter.connect(gainNode)
+        //            gainNode.connect(audioCtx.destination) // connecting the different audio graph nodes together
+        analyser.connect(audioCtx.destination);
+      }
       (() => {
         /* Speech API start */
         let SpeechRecognition =
