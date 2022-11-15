@@ -85,7 +85,7 @@
             </g>
           </svg>
         </button>
-        <form id="searchForm" method="POST" action="{% url 'index' %}"> <!-- 값 전송-->
+        <form id="searchForm" method="POST" action="{% url 'index' %}" enctype="multipart/form-data"> <!-- 값 전송-->
           {% csrf_token %}
           <button class="summitbtn" type="submit" id="btn_search">▶</button>
           <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
@@ -220,10 +220,18 @@
           mediaRecorder.onstop = (event) => {
             // 녹음이 종료되면, 배열에 담긴 오디오 데이터(Blob)들을 합친다: 코덱도 설정해준다.
             const blob = new Blob(audioArray, { type: "audio/wav codecs=opus" });
+
+            //const blob = new Blob([new ArrayBuffer(data)], { type: 'audio/ogg codecs=opus' });
             audioArray.splice(0); // 기존 오디오 데이터들은 모두 비워 초기화한다.
   
             // Blob 데이터에 접근할 수 있는 주소를 생성한다.
             const blobURL = window.URL.createObjectURL(blob);
+
+            const formData = new FormData();
+            formData.append("webmasterfile", blob);
+            for (let value of formData.values()) {
+              console.log(value);
+            }
             document.getElementById('audiourl').value = blob
             document.getElementById('audiourl2').value = blobURL
             // audio엘리먼트로 재생한다.
@@ -231,7 +239,7 @@
             $audioEl.play();
   
             downloadLink.href = blobURL;
-            downloadLink.download = "acetest.wav";
+            downloadLink.download = "";
           };
   
           // 녹음 시작
