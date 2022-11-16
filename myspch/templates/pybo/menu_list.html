@@ -1,0 +1,51 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title> 추천</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'output.css' %}" />
+</head>
+<body>
+	<div id="wrap">
+		<header>키오스크</header>
+		<nav>
+			<nav>
+
+			</nav>
+		</nav>
+		<main>
+			<div id="recommend">
+				<h3> <span> {{kw}} </span> 종류</h3>
+				{% if menu_list %}
+				{% for menu in menu_list %}
+				<div class="menu">
+					<div class ="food_list">
+						<div><img src="{{menu.imglink}}" class="food_img"></div>
+						<div class ="name"><b>{{ menu.menuName }}</div>
+						<div class="price"> ₩ {{ menu.Price }}원</div>
+					<!--<'cdiv class="content"> {{ menu.content }}</div>-->
+					</div>
+				</div>
+				{% endfor %}
+				{% else %}
+				<p>해당 매뉴가 없습니다.</p>
+				{% endif %}
+					<div class="clear"></div>
+			</div>
+		</main>
+		<h3> <span> {{peopleType}} </span> 추천메뉴.</h3>
+	      <audio controls>녹음된 소리를 재생할 audio 엘리먼트</audio>>
+
+
+		<div class="clear"></div>
+		<footer>
+			<b class="foot-text"> 주문하실 메뉴를 말씀해주세요</b>
+			<br>
+			<button type ="button"><img class="btn-img" src="images/mic3.png"></button>
+		</footer>
+	</div>
+</body>
+</html>

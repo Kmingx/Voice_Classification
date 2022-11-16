@@ -1,0 +1,95 @@
+html,
+
+*{
+    margin: 0;
+	padding: 0;
+}
+
+body{
+	background-color: white;
+	font-family: "맑은고딕";
+	font-size: 12px;
+	color: #444;
+}
+#wrap{
+	width: 80%;
+	margin: 0 auto;
+}
+header{
+	height: 50px;
+	background-color: pink;
+}
+/*ul{
+	list-style-type: none;
+}*/
+
+.clear{
+	clear: both;
+}
+
+
+#recommend h3{
+	padding-bottom: 7px;
+	border-bottom: 4px solid gold;
+	margin-top: 35px;
+	margin-bottom: 20px;
+}
+
+#recommend > h3 > span{
+	color: blue;
+	font-size: 30px;
+}
+
+#recommend .menu{
+	text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#recommend .food_list{
+    display: block;
+    border: 2px solid #ccc;
+    border-radius:4px;
+    width: 300px;
+    text-align: center;
+    /*text-decoration:none;*/
+    color: black;
+    float: left;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 30px;
+    box-shadow :1px 1px 1px  rgba(0,0,0,.4);
+}
+
+#recommend .name {
+    color: orangered;
+    /*width: 205px;*/
+	font-size: 22px;
+	margin-top: 10px;
+}
+
+#recommend .food_img {
+    width: 300px;
+    height: 300px;
+}
+
+#recommend .price{
+	font-size: 22px;
+}
+
+
+
+
+/*footer 공간*/
+footer{
+	height: 30px;
+	text-align: center;
+}
+.btn-img{
+	width:100px;
+	height:100px;
+}
+
+.foot-text{
+	font-size: 25px;
+}
