@@ -38,8 +38,10 @@ def menuList(request):
     kwList = kw.split()
     kwlist2 = []
     #audiourl = request.GET.get('audiourl','') # 값
-
-    if kw:
+    recommendationList =['메뉴추천','메뉴 추천','메뉴','추천','추천메뉴','추천 메뉴']
+    if kw in recommendationList:
+        return render(request, 'pybo/menu_list2.html')     
+    else:
         for i in kwList:
             #print(i)
             menu_list = Menu.objects.order_by('id')
@@ -60,8 +62,7 @@ def menuList(request):
                 print("오류")
         #print(result_set2)
         context = {'menu_list':menu_list,'kw': kw, 'peopleType':peopleType}
-
-    return render(request, 'pybo/menu_list.html', context)
+        return render(request, 'pybo/menu_list.html', context)
 
 
     
